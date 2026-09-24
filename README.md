@@ -2,6 +2,10 @@
 
 Bem-vindo! Este guia vai te ajudar a configurar seu ambiente de desenvolvimento para rodar as pipelines e modelos dbt do projeto **rj-smas**.
 
+## Documentação
+
+Estrutura do repositório, ambientes, trilha de estudo e checklists de code review: **[docs/](docs/README.md)**. Arquitetura das camadas dbt: [queries/ARCHITECTURE.md](queries/ARCHITECTURE.md).
+
 ## ⚡ Opção rápida: GitHub Codespaces
 
 Abra o repositório no GitHub em **Code → Codespaces**: o ambiente é configurado automaticamente (uv sync + dbt deps). O único passo manual é autenticar:

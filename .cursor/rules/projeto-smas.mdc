@@ -1,0 +1,27 @@
+---
+description: Identidade do monorepo rj-smas, pastas, ambientes e regra de ouro das camadas
+alwaysApply: true
+---
+
+# Projeto pipelines (RJ SMAS)
+
+Plataforma de dados da Secretaria Municipal de Assistência Social (Rio). Dois eixos:
+
+- `pipelines/` — Prefect 3: ingestão ArcGIS/SIURB e Bolsa Família (GCS), mais `dbt build` por tag.
+- `queries/` — dbt + BigQuery (projeto `queries`), arquitetura Medallion.
+
+CadÚnico, Prontuário Carioca e Sheets **não** têm flow Python: só `source()` em `queries/models/raw/`.
+
+## Stack e ambientes
+
+Python 3.13, uv, Prefect 3, dbt-bigquery. GCP: `rj-smas-dev` (dev/staging/CI) e `rj-smas` (prod). `MODE` é `staging` ou `prod`; dbt local padrão é target `dev`. Sempre `--project-dir queries --profiles-dir queries`.
+
+## Regra de ouro
+
+- `raw/` isola fontes (`source()` só aqui, salvo exceção já documentada).
+- Lógica de negócio em `intermediate/` e `intermediate/core/` — uma vez, reusada.
+- `marts/` só `ref()`; agregação e recorte de produto, sem recriar dimensões.
+
+## Antes de editar
+
+Leia `docs/README.md` e `queries/ARCHITECTURE.md`. Não reative `old_architecture/` sem alinhamento (`dashboard_arcgis`, `equipamentos` e `old_architecture/bolsa_familia` já estão ligados).

@@ -1,0 +1,38 @@
+---
+description: Convenções Medallion, nomenclatura e testes para modelos dbt
+globs: queries/**/*.{sql,yml}
+alwaysApply: false
+---
+
+# dbt Medallion (`queries/`)
+
+Camadas e materialização (ver `queries/ARCHITECTURE.md` e `dbt_project.yml`):
+
+| Camada | Path | Materialização |
+|--------|------|----------------|
+| raw | `models/raw/<sistema>/` | view (CadÚnico: table + tag weekly) |
+| intermediate | `models/intermediate/{social,atividades,...}/` | ephemeral |
+| core | `models/intermediate/core/` | table (`dim_*`, `fct_*`) |
+| marts | `models/marts/<produto>/` | table (`mart_<produto>__<desc>`) |
+
+Não criar `staging/` na arquitetura nova. Prefixo `stg_*` só em `old_architecture/`.
+
+## source vs ref
+
+```sql
+-- raw: único lugar com source()
+from {{ source('brutos_acolherio_staging', 'gh_us') }}
+
+-- demais camadas
+from {{ ref('raw_unidades') }}
+```
+
+Exceção existente: PIC `int_status` lê source histórico. Não expandir `source()` downstream sem documentar.
+
+## Checklist ao criar/alterar modelo
+
+- Nome: `raw_` / `int_` / `dim_` / `fct_` / `mart_`. Prontuário: pasta `prontuario_carioca_assistencia_social`.
+- YAML 1:1 ao lado do `.sql` com grain (`unique`, `not_null`).
+- Sem duplicar lógica de `intermediate/core`. Use vars (`competencia`, `corte_extrema_pobreza`).
+- CadÚnico: macros de partição. Incremental: partição + `is_incremental()` idempotente.
+- Tags `daily` / `weekly` / `monthly` conforme o produto. Conferir se o path está `+enabled`.

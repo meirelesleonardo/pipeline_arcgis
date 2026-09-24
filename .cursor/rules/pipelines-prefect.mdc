@@ -1,0 +1,30 @@
+---
+description: Padrão Prefect, MODE, secrets e acoplamento com sources dbt
+globs: pipelines/**/*.py
+alwaysApply: false
+---
+
+# Pipelines Prefect
+
+Padrão: `@flow` → `@task` de extract/load → tabela BigQuery estável → `dbt run`/`build --select` com `--target` = `MODE` (`staging`|`prod`).
+
+```python
+dbt_target = os.getenv("MODE", "staging")
+# project_dir e profiles_dir = "queries"
+```
+
+Dois estilos de dbt: `trigger_dbt_cli_command` (ArcGIS/bolsa) ou `dbtRunner` em `datalake/transform/dbt/`.
+
+## Config e secrets
+
+- `MODE` e projeto/dataset: `pipelines/constants.py`, `pipelines/utils/settings.py`, `pipelines/arcgis/constants.py`.
+- Sem credenciais no código. `SIURB_*` e `GCP_CREDENTIALS` só via env / `prefect.yaml`.
+- `.env` é gitignored; o código não chama `load_dotenv`.
+
+## Ao adicionar ou mudar um flow
+
+1. Registrar par `*-staging` e `*-prod` em `prefect.yaml` se for para o cluster.
+2. Nome da tabela Python = `source()` / `_sources.yml` no dbt (ex.: `arcgis_raw.equipamento_raw`).
+3. `--select` alinhado a modelos/tags novos.
+4. Load ArcGIS: replace atômico; camada vazia pode recriar tabela. Bolsa: não quebrar WAP nem cachear task com side effect.
+5. Write-back ArcGIS: datasets/tabelas delta diferem prod vs staging.
