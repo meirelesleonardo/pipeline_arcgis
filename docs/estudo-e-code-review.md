@@ -2,6 +2,8 @@
 
 Para versionar este material no seu fork e baixar uma PR sem misturar `docs/` e `.cursor/` no código oficial, siga [fluxo-fork-e-review.md](fluxo-fork-e-review.md). Os checklists abaixo valem no GitHub da SMAS (comentar e aprovar).
 
+Depois de revisar, registre o que importa para consulta futura em [reviews/](reviews/README.md) (template em [reviews/_template.md](reviews/_template.md)).
+
 ## Trilha de estudo (nessa ordem)
 
 1. [README da raiz](../README.md) — levantar o ambiente e rodar `dbt debug`.
@@ -56,3 +58,4 @@ Depois disso, pegue um PR real e aplique os checklists abaixo. Não comece pelo 
 | Cartão PIC operação | `queries/models/marts/cartao_pic/operacao/` + flow PIC |
 | Acolhimento | `intermediate/core/fct_acolhimento_*` → `marts/acolhimento/` |
 | Atividades de grupo | `intermediate/atividades/` → `marts/atividades/` |
+| Centro POP / planilha unificada | `marts/centro_pop/mart_planilha_unificada_centro_pop` — review [PR #139](reviews/2026-10-pr-139-centro-pop-planilha-unificada.md) |

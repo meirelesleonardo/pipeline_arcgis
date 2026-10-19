@@ -9,6 +9,7 @@ Guia de onboarding para quem vai estudar o repositório e participar de code rev
 3. [Como usar](como-usar.md) — comandos do dia a dia, Prefect local e CI.
 4. [Estudo e code review](estudo-e-code-review.md) — trilha de leitura e checklists.
 5. [Fluxo fork e review](fluxo-fork-e-review.md) — fork, branch `local/docs` e como puxar uma PR.
+6. [Histórico de reviews](reviews/README.md) — registros locais de PRs revisadas (referência futura).
 
 ## Mapa rápido
 
@@ -16,6 +17,7 @@ Guia de onboarding para quem vai estudar o repositório e participar de code rev
 |-------------|---------|
 | Instalar uv, gcloud e validar dbt | [README.md](../README.md) |
 | Fork, docs pessoais e rotina de PR | [fluxo-fork-e-review.md](fluxo-fork-e-review.md) |
+| Histórico de code reviews (fork) | [reviews/README.md](reviews/README.md) |
 | Princípios das camadas raw / intermediate / marts | [queries/ARCHITECTURE.md](../queries/ARCHITECTURE.md) |
 | História da migração AcolheRio → Medallion | [queries/refatoracao-arquitetura-acolherio.md](../queries/refatoracao-arquitetura-acolherio.md) |
 | Targets BigQuery (`dev`, `staging`, `prod`, `ci`) | [queries/profiles.yml](../queries/profiles.yml) |

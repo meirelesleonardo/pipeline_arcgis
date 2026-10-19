@@ -27,7 +27,7 @@ local/docs     →  origin/local/docs  (só no fork)
 cd c:\laragon\www\pipelines
 
 git remote rename origin upstream
-git remote add origin https://github.com/SEU_USUARIO/pipelines.git
+git remote add origin https://github.com/meirelesleonardo/pipeline_arcgis.git
 
 git fetch upstream
 git checkout main
@@ -90,6 +90,8 @@ git checkout local/docs -- docs .cursor
 
 Analise o diff, use os checklists em [estudo-e-code-review.md](estudo-e-code-review.md) e comente/aprove **na PR do original** no GitHub.
 
+Opcional (fork): arquive um resumo em [reviews/](reviews/README.md) a partir de [reviews/_template.md](reviews/_template.md) — grão, breaking changes, pendências de negócio — para não depender só do thread da PR.
+
 Ao terminar, tire o overlay para não misturar com a PR:
 
 ```powershell
@@ -107,4 +109,4 @@ Não faça merge da PR em `local/docs` nem commit do overlay na branch da PR.
 1. Fork uma vez; `origin` = você, `upstream` = SMAS.
 2. `main` só acompanha o original.
 3. `local/docs` versiona estudo e regras do Cursor no fork.
-4. PR: checkout → overlay `docs`/`.cursor` → review no GitHub da SMAS → restaurar.
+4. PR: checkout → overlay `docs`/`.cursor` → review no GitHub da SMAS → (opcional) registrar em `docs/reviews/` → restaurar.
