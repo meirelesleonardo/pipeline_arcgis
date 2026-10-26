@@ -10,7 +10,7 @@ Plataforma de dados da Secretaria Municipal de Assistência Social (Rio). Dois e
 - `pipelines/` — Prefect 3: ingestão ArcGIS/SIURB e Bolsa Família (GCS), mais `dbt build` por tag.
 - `queries/` — dbt + BigQuery (projeto `queries`), arquitetura Medallion.
 
-CadÚnico, Prontuário Carioca e Sheets **não** têm flow Python: só `source()` em `queries/models/raw/`.
+CadÚnico, Prontuário Carioca e Sheets **não** têm flow de ingestão: só `source()` em `queries/models/raw/`. Export de mart para CSV no GCS segue `docs/padrao-espelho-dbt-prefect.md`.
 
 ## Stack e ambientes
 

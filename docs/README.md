@@ -10,6 +10,7 @@ Guia de onboarding para quem vai estudar o repositório e participar de code rev
 4. [Estudo e code review](estudo-e-code-review.md) — trilha de leitura e checklists.
 5. [Fluxo fork e review](fluxo-fork-e-review.md) — fork, branch `local/docs` e como puxar uma PR.
 6. [Histórico de reviews](reviews/README.md) — registros locais de PRs revisadas (referência futura).
+7. [Padrão espelho dbt → GCS](padrao-espelho-dbt-prefect.md) — mart no dbt, Prefect só decide e exporta (referência: PRs #154 e #158).
 
 ## Mapa rápido
 
@@ -23,7 +24,8 @@ Guia de onboarding para quem vai estudar o repositório e participar de code rev
 | Targets BigQuery (`dev`, `staging`, `prod`, `ci`) | [queries/profiles.yml](../queries/profiles.yml) |
 | Tags, schemas e legado ligado/desligado | [queries/dbt_project.yml](../queries/dbt_project.yml) |
 | Deployments Prefect | [prefect.yaml](../prefect.yaml) |
+| Espelho: mart dbt → CSV no GCS | [padrao-espelho-dbt-prefect.md](padrao-espelho-dbt-prefect.md) |
 
 ## Base da IA no Cursor
 
-Regras persistentes em [`.cursor/rules/`](../.cursor/rules/): visão geral sempre ativa, convenções dbt ao editar SQL/YAML e convenções Prefect ao editar Python.
+Regras persistentes em [`.cursor/rules/`](../.cursor/rules/): visão geral sempre ativa, convenções dbt ao editar SQL/YAML, convenções Prefect ao editar Python e o padrão de espelho (mart → GCS) ao editar esses arquivos. A skill `pipeline-dbt-gcs-export` aplica o procedimento quando a tarefa for criar ou alterar um export desse tipo.

@@ -62,10 +62,12 @@ Em produção, schemas separam camadas (`raw`, `core`, `marts`, mais overrides d
 
 ## O que o Python não ingere
 
-CadÚnico, Prontuário Carioca e Google Sheets **não** têm flow Prefect neste repo. Entram no dbt só via `source()` em [`queries/models/raw/`](../queries/models/raw/):
+CadÚnico, Prontuário Carioca e Google Sheets **não** têm flow de ingestão. Entram no dbt só via `source()` em [`queries/models/raw/`](../queries/models/raw/):
 
 - Prontuário: Airbyte → `rj-smas.brutos_acolherio_staging`
 - CadÚnico: dataset `rj-smas.protecao_social_cadunico`
 - Sheets: fontes declaradas em `raw/sheets/_sources.yml`
 
 O Python cobre ArcGIS/SIURB, Bolsa Família (ZIP no GCS → BigQuery WAP) e o flow genérico de dbt.
+
+O espelho `cd_cidadao_pac` é outra coisa: flow de **saída**. O CadÚnico continua sem ingestão Python; o Prefect só decide se há competência nova, roda o mart e publica o CSV. Padrão em [padrao-espelho-dbt-prefect.md](padrao-espelho-dbt-prefect.md).

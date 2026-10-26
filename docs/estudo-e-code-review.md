@@ -15,6 +15,7 @@ Depois de revisar, registre o que importa para consulta futura em [reviews/](rev
 7. Um mart: [`mart_rma_cras__indicadores.sql`](../queries/models/marts/rma_cras/mart_rma_cras__indicadores.sql) — consome `dim_`/`fct_`/`int_`, tags `monthly`, vars.
 8. Um flow: [`pipelines/arcgis/abordagem/flows.py`](../pipelines/arcgis/abordagem/flows.py) — extract → tabela `*_raw` → `dbt run --select …`. Conferir o par em [`prefect.yaml`](../prefect.yaml).
 9. [`dbt_project.yml`](../queries/dbt_project.yml) — o que está enabled no legado e quais tags/schemas valem.
+10. [Padrão espelho dbt → GCS](padrao-espelho-dbt-prefect.md) — quando o PR materializa um mart e exporta CSV. O código de referência está na branch da feature (PRs #154 / #158), não nesta branch.
 
 Depois disso, pegue um PR real e aplique os checklists abaixo. Não comece pelo `old_architecture/` a menos que o PR mexa nele.
 
@@ -27,6 +28,7 @@ Depois disso, pegue um PR real e aplique os checklists abaixo. Não comece pelo 
 - [ ] **Materialização e schema** batem com `dbt_project.yml` (tags `daily` / `weekly` / `monthly`, overrides de `cartao_pic`, etc.).
 - [ ] **Incremental:** campo de partição, predicado `is_incremental()`, overwrite idempotente.
 - [ ] **CadÚnico:** macros de partição (`filtro_particao_cadunico` / `obter_particao_cadunico`) — não varrer histórico inteiro.
+- [ ] **Mart de contrato externo** (espelho): sem join, sem `where`, sem agregação; isso fica no intermediate. Ver [padrao-espelho-dbt-prefect.md](padrao-espelho-dbt-prefect.md).
 - [ ] **Vars** (`competencia`, `corte_extrema_pobreza`) em vez de número mágico no SQL.
 - [ ] **Ciclos:** respeitar a direção das dependências (ver comentários em `int_usuarios.sql`).
 - [ ] **Snapshots:** mudança de grain/colunas em `mart_status` exige olhar `snapshots/snapshot_status_cartao_pic.yml`.
@@ -42,6 +44,7 @@ Depois disso, pegue um PR real e aplique os checklists abaixo. Não comece pelo 
 - [ ] Load ArcGIS: `item_id` / layer documentados; entender o replace atômico (camada vazia pode recriar tabela).
 - [ ] Bolsa Família: não quebrar WAP nem `identify_pending_files`; tasks com efeito colateral não devem ganhar cache Prefect.
 - [ ] Write-back ArcGIS (feedback / meta AR/CPF): nomes de dataset/tabela delta diferem prod vs staging.
+- [ ] **Espelho mart → GCS:** SQL de negócio fora do Python; `dbt build` só no caminho de exportação; estado gravado só depois do export; staging fora do prefixo e da tabela de prod. Checklist em [padrao-espelho-dbt-prefect.md](padrao-espelho-dbt-prefect.md).
 
 ## Como comentar em review
 

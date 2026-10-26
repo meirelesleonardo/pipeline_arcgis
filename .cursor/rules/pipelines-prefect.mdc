@@ -28,3 +28,4 @@ Dois estilos de dbt: `trigger_dbt_cli_command` (ArcGIS/bolsa) ou `dbtRunner` em 
 3. `--select` alinhado a modelos/tags novos.
 4. Load ArcGIS: replace atômico; camada vazia pode recriar tabela. Bolsa: não quebrar WAP nem cachear task com side effect.
 5. Write-back ArcGIS: datasets/tabelas delta diferem prod vs staging.
+6. Espelho (mart → CSV no GCS): sem SQL de negócio no Python; estado só após o export; staging isolado de prod. Ver `.cursor/rules/espelho-mart-gcs.mdc`.

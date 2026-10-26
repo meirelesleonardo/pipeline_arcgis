@@ -18,7 +18,8 @@ Dockerfile                 # Imagem do worker Prefect
 | [`pipelines/arcgis/`](../pipelines/arcgis/) | Extração SIURB → `arcgis_raw.*_raw`; alguns flows escrevem de volta no ArcGIS (PIC, meta AR/CPF). |
 | [`pipelines/bolsa_familia/`](../pipelines/bolsa_familia/) | ZIP no GCS → staging → WAP → dbt. |
 | [`pipelines/datalake/transform/dbt/`](../pipelines/datalake/transform/dbt/) | `dbt build` por seletor/tag. |
-| [`pipelines/utils/`](../pipelines/utils/) | `MODE` → projeto/bucket; auth GCP. |
+| [`pipelines/utils/`](../pipelines/utils/) | `MODE` → projeto/bucket; auth GCP. `export.py` exporta tabela já materializada para o GCS. |
+| `pipelines/cadunico_bq_to_prontuario_eletronico/` | Espelho `cd_cidadao_pac`: decide competência, roda o mart e publica o CSV. Padrão em [padrao-espelho-dbt-prefect.md](padrao-espelho-dbt-prefect.md). O código está na branch da feature (PRs #154 / #158), não nesta branch. |
 | [`queries/models/`](../queries/models/) | Modelos Medallion + `old_architecture/`. |
 | [`queries/macros/`](../queries/macros/) | Schema CI, CadÚnico, AcolheRio, nomes, etc. |
 | [`queries/snapshots/`](../queries/snapshots/) | Histórico (ex.: status Cartão PIC). |
@@ -47,8 +48,8 @@ Não existe pasta `staging/` na arquitetura nova: raw absorve rename/cast.
 
 ### Domínios em `intermediate/` e produtos em `marts/`
 
-- Intermediate: `core`, `social`, `atividades`, `cartao_pic`, `bolsa_familia`
-- Marts: `acolhimento`, `atividades`, `atendimentos_acolherio`, `bolsa_familia`, `cartao_pic`, `centro_pop`, `core`, `estrutura_assistencial`, `pic`, `poc_paif`, `risco_social`, `rma_cras`
+- Intermediate: `core`, `social`, `atividades`, `cartao_pic`, `bolsa_familia`, e `cadunico/` no espelho (`int_cadunico_membros_familia`)
+- Marts: `acolhimento`, `atividades`, `atendimentos_acolherio`, `bolsa_familia`, `cartao_pic`, `centro_pop`, `core`, `estrutura_assistencial`, `pic`, `poc_paif`, `risco_social`, `rma_cras`, e `cadunico/prontuario_eletronico/` (`cd_cidadao_pac`)
 
 ## Nomenclatura
 
@@ -80,5 +81,7 @@ Ao revisar PR: conferir se a mudança é no caminho novo ou no legado ainda habi
 1. Python grava tabelas com nomes estáveis (`arcgis_raw.equipamento_raw`, `bolsa_familia_staging.folha`, …).
 2. dbt declara essas tabelas em `_sources.yml` e constrói as camadas.
 3. O flow chama `dbt run` / `dbt build` com `--select` alinhado ao produto (`+abordagem`, `+tag:daily`, `+folha+`, …).
+
+Há um segundo desenho, de **saída**: o dbt já materializou o mart e o Prefect só exporta CSV quando há competência nova. Referência: [padrao-espelho-dbt-prefect.md](padrao-espelho-dbt-prefect.md). Nesse desenho o Python não grava a tabela de negócio (quem materializa é o `dbt build`) e não contém SQL de join ou filtro.
 
 Exemplo de raw enxuto (só `source()`, rename e tipagem): [`queries/models/raw/prontuario_carioca_assistencia_social/raw_unidades.sql`](../queries/models/raw/prontuario_carioca_assistencia_social/raw_unidades.sql).

@@ -1,0 +1,20 @@
+---
+description: Espelho mart dbt exportado ao GCS — transformação no dbt, Prefect só decide e publica
+globs:
+  - pipelines/**/*.py
+  - queries/models/**/*.sql
+  - queries/models/**/*.yml
+  - prefect.yaml
+alwaysApply: false
+---
+
+# Espelho mart → GCS
+
+Nota: `docs/padrao-espelho-dbt-prefect.md`. Referência de código (branch da feature, PRs #154 / #158): `pipelines/cadunico_bq_to_prontuario_eletronico/`.
+
+- Transformação no dbt. Prefect só decide, roda `dbt build`, exporta e grava estado.
+- Mart de contrato externo: sem join, sem `where`, sem agregação. Joins e filtro no intermediate.
+- Sem SQL de negócio em `pipelines/`. Export por `pipelines/utils/export.py`.
+- `dbt build` só se a decisão for exportar. Estado no GCS só depois do export. Falha não grava estado.
+- Staging não escreve no prefixo nem na tabela de prod.
+- Bucket `rj-smas-dev` em produção é exceção do app do prontuário. Não copiar.

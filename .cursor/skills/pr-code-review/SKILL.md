@@ -26,7 +26,7 @@ Ler nesta ordem, só o necessário para o diff:
 2. [queries/ARCHITECTURE.md](../../../queries/ARCHITECTURE.md) — camadas
 3. [docs/estrutura.md](../../../docs/estrutura.md) e [docs/visao-geral.md](../../../docs/visao-geral.md) — pastas, fontes, o que o Python não ingere
 4. [docs/estudo-e-code-review.md](../../../docs/estudo-e-code-review.md) — checklists
-5. Regras: [.cursor/rules/projeto-smas.mdc](../../rules/projeto-smas.mdc), [dbt-medallion.mdc](../../rules/dbt-medallion.mdc), [pipelines-prefect.mdc](../../rules/pipelines-prefect.mdc)
+5. Regras: [.cursor/rules/projeto-smas.mdc](../../rules/projeto-smas.mdc), [dbt-medallion.mdc](../../rules/dbt-medallion.mdc), [pipelines-prefect.mdc](../../rules/pipelines-prefect.mdc), [espelho-mart-gcs.mdc](../../rules/espelho-mart-gcs.mdc)
 6. [queries/dbt_project.yml](../../../queries/dbt_project.yml) — tags, schemas, `+enabled` do legado
 7. Código tocado **e** consumidores (`ref()`, `source()`, `--select` em flows, YAML irmão, snapshots)
 
@@ -62,7 +62,7 @@ raw  →  intermediate / core  →  marts
 Consumo (BI, operação, write-back ArcGIS)
 ```
 
-Não existe `staging/` na arquitetura nova. `stg_*` e `old_architecture/` só se o PR mexer nisso. CadÚnico, Prontuário e Sheets **não** têm flow Python.
+Não existe `staging/` na arquitetura nova. `stg_*` e `old_architecture/` só se o PR mexer nisso. CadÚnico, Prontuário e Sheets **não** têm flow de ingestão (entram por `source()`). O espelho `cd_cidadao_pac` é flow de saída (mart → CSV): padrão em [docs/padrao-espelho-dbt-prefect.md](../../../docs/padrao-espelho-dbt-prefect.md).
 
 ## 3. Procedimento
 
@@ -131,7 +131,7 @@ Completude, unicidade, NULL, chaves, consistência, temporalidade — **se** o m
 | Testes singulares | `queries/tests/validar_capacidade_unidades.sql`; pasta `tests/dashboard_acolherio/` (legado; muitos `stg_*` desligados) |
 | Recce slim | CI em PR que muda `queries/models/**/*.sql` |
 | Lint | Ruff/SQLFluff **só linhas tocadas** |
-| pytest | praticamente ausente |
+| pytest | decisão e export do espelho em `tests/test_cadunico_espelho.py` (branch da feature / PRs #154 e #158); no restante do repo, quase ausente |
 
 **Não existem** testes `relationships:` no YAML. Não exigir suíte unitária/integração genérica. Pedir teste só se proteger comportamento que o PR altera (grain, métrica, partição).
 
